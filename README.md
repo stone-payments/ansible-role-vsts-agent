@@ -1,12 +1,18 @@
 VSTS-Agent
 ==========
 
+**_This is a rework of the vsts-agent role from https://github.com/sigio/ansible-role-vsts-agent. After my pull request was not accepted, commented or rejected for a long time I assume the role was abandoned._**
+
+
+
 A role to install and configure the VSTS-agent (Microsoft Visual Studio Team Services Build and Release Agent) for RedHat Enterprise 7.2+
+
+
 
 Requirements
 ------------
 
-Python-pip is installed and used to install a new enough version of pexpect, as the version packaged in redhat isn't new enough. Also rh-git29 is installed from software-collections, as VSTS requires a newer version of git.
+python-pip to install a newer version of pexpect. Also rh-git29 is installed from software-collections, as VSTS requires a newer version of git.
 
 Role Variables
 --------------
@@ -25,7 +31,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: sigio.vsts-agent }
+         - { role: angrox.vsts-agent }
 
 License
 -------
@@ -35,4 +41,4 @@ MIT
 Author Information
 ------------------
 
-github: sigio
+github: angrox
