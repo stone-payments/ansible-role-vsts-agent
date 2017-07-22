@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - { vsts-agent, vsts_agent_user: root, dryrun: true }
+    - { role:vsts-agent, vsts_agent_user: root, dryrun: true }
