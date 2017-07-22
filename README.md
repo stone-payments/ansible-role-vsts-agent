@@ -1,7 +1,13 @@
 VSTS-Agent
 ==========
 
+[![Build Status](https://travis-ci.org/angrox/ansible-role-vsts-agent.svg?branch=master)](https://travis-ci.org/angrox/ansible-role-vsts-agent)
+
+
+
 **_This is a rework of the vsts-agent role from https://github.com/sigio/ansible-role-vsts-agent. After my pull request was not accepted, commented or rejected for a long time I assume the role was abandoned._**
+
+
 
 
 
