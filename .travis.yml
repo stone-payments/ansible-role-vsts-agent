@@ -15,6 +15,7 @@ install:
   - sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/vsts-agent:ro --name centos-${OS_VERSION} centos:${OS_VERSION} sleep 300
   - sudo docker exec centos-${OS_VERSION} yum -y install epel-release
   - sudo docker exec centos-${OS_VERSION} yum -y install ansible
+  - sudo docker exec centos-${OS_VERSION} yum -y install jq
 
 script:
   # Check syntax of ansible playbook
