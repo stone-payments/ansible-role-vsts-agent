@@ -1,13 +1,12 @@
 ---
+# This is the API URL to get the latest release
+vsts_github_api: "https://api.github.com/repos/Microsoft/vsts-agent/releases/latest"
 
-# Download URL:
-
-
-vsts_agent_version: "2.115.0"
-vsts_agent_baseurl: "https://github.com/Microsoft/vsts-agent/releases/download/v"
-vsts_agent_file: "vsts-agent-rhel.7.2-x64-{{vsts_agent_version}}.tar.gz"
-# https://github.com/Microsoft/vsts-agent/releases/download/v2.115.0/vsts-agent-rhel.7.2-x64-2.115.0.tar.gz
-vsts_agent_fullurl: "{{vsts_agent_baseurl}}{{vsts_agent_version}}/{{vsts_agent_file}}"
+# If vsts_agent_fullurl is set this specific version will be downloaded instead of latest
+# vsts_agent_version: "2.119.0"
+# vsts_agent_baseurl: "https://github.com/Microsoft/vsts-agent/releases/download/v"
+# vsts_agent_file: "vsts-agent-rhel.7.2-x64-{{vsts_agent_version}}.tar.gz"
+# vsts_agent_fullurl: "{{vsts_agent_baseurl}}{{vsts_agent_version}}/{{vsts_agent_file}}"
 
 vsts_agent_user: "deploy"
 
