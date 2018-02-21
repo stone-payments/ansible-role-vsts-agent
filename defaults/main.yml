@@ -3,12 +3,12 @@
 vsts_github_api: "https://api.github.com/repos/Microsoft/vsts-agent/releases/latest"
 
 # If vsts_agent_fullurl is set this specific version will be downloaded instead of latest
-# vsts_agent_version: "2.119.0"
-# vsts_agent_baseurl: "https://github.com/Microsoft/vsts-agent/releases/download/v"
-# vsts_agent_file: "vsts-agent-rhel.7.2-x64-{{vsts_agent_version}}.tar.gz"
-# vsts_agent_fullurl: "{{vsts_agent_baseurl}}{{vsts_agent_version}}/{{vsts_agent_file}}"
-
-vsts_agent_user: "deploy"
+# https://vstsagentpackage.azureedge.net/agent/2.129.0/vsts-agent-linux-x64-2.129.0.tar.gz
+vsts_agent_version: "2.129.0"
+vsts_agent_baseurl: "https://vstsagentpackage.azureedge.net/agent"
+vsts_agent_file: "vsts-agent-linux-x64-{{vsts_agent_version}}.tar.gz"
+vsts_agent_fullurl: "{{vsts_agent_baseurl}}{{vsts_agent_version}}/{{vsts_agent_file}}"
+#vsts_agent_user: "deploy"
 
 vsts_accountname: "ENTERYOURACCOUNTNAME"
 vsts_poolname: "ENTERYOURPOOLNAME"
