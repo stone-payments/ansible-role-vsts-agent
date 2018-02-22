@@ -7,7 +7,7 @@ vsts_github_api: "https://api.github.com/repos/Microsoft/vsts-agent/releases/lat
 vsts_agent_version: "2.129.0"
 vsts_agent_baseurl: "https://vstsagentpackage.azureedge.net/agent"
 vsts_agent_file: "vsts-agent-linux-x64-{{vsts_agent_version}}.tar.gz"
-vsts_agent_fullurl: "{{vsts_agent_baseurl}}{{vsts_agent_version}}/{{vsts_agent_file}}"
+vsts_agent_fullurl: "{{vsts_agent_baseurl}}/{{vsts_agent_version}}/{{vsts_agent_file}}"
 #vsts_agent_user: "deploy"
 
 vsts_accountname: "ENTERYOURACCOUNTNAME"
