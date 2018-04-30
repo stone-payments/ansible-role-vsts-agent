@@ -7,6 +7,11 @@
     install_command: "{{ install_command }} --pool {{ vsts_poolname }}"
   when: vsts_poolname|default("") != "" 
 
+- name: Add proxy-url to install command
+  set_fact:
+    install_command: "{{ install_command }} --proxyurl {{ vsts_proxyurl }}"
+  when: vsts_proxyurl|default("") != ""
+
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
     install_command: "{{ install_command }} --projectname {{ vsts_projectname}} --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname}} "
