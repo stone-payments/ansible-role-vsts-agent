@@ -74,12 +74,8 @@
     - fetch
     - unzip
 
-- name: Configure vsts-agent
-  command: "./config.sh --unattended --acceptteeeula --url {{vsts_server_url}} --auth PAT --token {{vsts_accesstoken}} --pool '{{vsts_poolname}}' --agent {{vsts_agent_name}} --work {{vsts_workfolder}} --replace"
-  args:
-    chdir: "{{vsts_agentfolder}}"
-    creates: "{{vsts_agentfolder}}/.agent"
-  become_user: "{{vsts_agent_user}}"
+- name: Include configure vsts-agent tasks
+  include_tasks: configure_vsts_agent.yml
   when: dryrun is not defined
   tags:
     - config
