@@ -13,6 +13,7 @@ vsts_agent_fullurl: "{{vsts_agent_baseurl}}/{{vsts_agent_version}}/{{vsts_agent_
 vsts_accountname: "ENTERYOURACCOUNTNAME"
 #ENTERYOURPOOLNAME
 vsts_poolname: ""
+vsts_proxyurl: ""
 
 vsts_server_url: "https://{{vsts_accountname}}.visualstudio.com/"
 vsts_agent_name: "{{ansible_hostname}}"

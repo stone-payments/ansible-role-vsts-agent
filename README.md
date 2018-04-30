@@ -23,7 +23,10 @@ python-pip to install a newer version of pexpect. Also rh-git29 is installed fro
 Role Variables
 --------------
 
-At a minimum, override the variables vsts_accountname and vsts_poolname, other variables are documented in the defaults/main.yml file.
+At a minimum, override the variables vsts_accountname and vsts_poolname to install the regular queue agent.  
+To install a deployment group agent override the variables vsts_accountname ,vsts_projectname and vsts_deploymentgroupname.
+
+Other variables are documented in the defaults/main.yml file.
 
 Dependencies
 ------------
