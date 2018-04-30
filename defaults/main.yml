@@ -11,7 +11,8 @@ vsts_agent_fullurl: "{{vsts_agent_baseurl}}/{{vsts_agent_version}}/{{vsts_agent_
 #vsts_agent_user: "deploy"
 
 vsts_accountname: "ENTERYOURACCOUNTNAME"
-vsts_poolname: "ENTERYOURPOOLNAME"
+#ENTERYOURPOOLNAME
+vsts_poolname: ""
 
 vsts_server_url: "https://{{vsts_accountname}}.visualstudio.com/"
 vsts_agent_name: "{{ansible_hostname}}"
