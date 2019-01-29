@@ -81,7 +81,7 @@
     - config
 
 - name: Initial installation of systemd service files and generation of runsvc.sh
-  command: "./svc.sh install"
+  command: "./svc.sh install {{vsts_agent_user}}"
   args:
     chdir: "{{vsts_agentfolder}}"
     creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
