@@ -11,7 +11,7 @@ VSTS-Agent
 
 
 
-A role to install and configure the VSTS-agent (Microsoft Visual Studio Team Services Build and Release Agent) for RedHat Enterprise 7.2+
+A role to install and configure the VSTS-agent (Microsoft Visual Studio Team Services Build and Release Agent) for RedHat Enterprise 7.2+ and Debian OS Family
 
 
 
