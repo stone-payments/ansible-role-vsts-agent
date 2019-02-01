@@ -20,7 +20,7 @@
       command: "./bin/installdependencies.sh"
       args:
         chdir: "{{ vsts_agentfolder }}"
-        # creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
+        creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
       become: true
       when: dryrun is not defined        
 
@@ -35,19 +35,6 @@
         creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
       become: true
       when: dryrun is not defined
-
-    - name: Extend runsvc.sh with addition configuration
-      lineinfile:
-        dest: "{{ vsts_agentfolder }}/runsvc.sh"
-        regexp: "{{ item.regex }}"
-        insertafter: '^# insert anything to setup env when running as a service'
-        line: "{{ item.line }}"
-      with_items: "{{ runsvc_regex_fileline }}"
-      tags:
-        - config
-        - service
-      when: (runsvc_regex_fileline is defined ) and
-            (dryrun is not defined)   
 
     - name: Enable and start vsts-agent service
       service:
