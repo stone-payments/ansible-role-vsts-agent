@@ -51,19 +51,6 @@
     - config
     - service
 
-- name: Extend runsvc.sh with addition configuration
-  lineinfile:
-    dest: "{{vsts_agentfolder}}/runsvc.sh"
-    regexp: "{{ item.regex }}"
-    insertafter: '^# insert anything to setup env when running as a service'
-    line: "{{ item.line }}"
-  with_items: "{{ runsvc_regex_fileline }}"
-  tags:
-    - config
-    - service
-  when: (runsvc_regex_fileline is defined ) and
-        (dryrun is not defined)
-
 - name: Enable and start vsts-agent service
   service:
     name: "vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}"
