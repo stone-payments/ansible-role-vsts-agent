@@ -13,6 +13,8 @@ vsts_agent_user: "vstsuser"
 vsts_accountname: "ENTERYOURACCOUNTNAME"
 #ENTERYOURPOOLNAME
 vsts_poolname: ""
+# To use Deployment Group
+vsts_deploymentgroupname: ""
 vsts_proxyurl: ""
 
 vsts_server_url: "https://{{ vsts_accountname }}.visualstudio.com/"
