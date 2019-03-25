@@ -11,14 +11,14 @@ VSTS-Agent
 
 
 
-A role to install and configure the VSTS-agent (Microsoft Visual Studio Team Services Build and Release Agent) for RedHat Enterprise 7.2+
+A role to install and configure the VSTS-agent (Microsoft Visual Studio Team Services Build and Release Agent) for RedHat Enterprise 7.2+ and Debian OS Family
 
 
 
 Requirements
 ------------
 
-python-pip to install a newer version of pexpect. Also rh-git29 is installed from software-collections, as VSTS requires a newer version of git.
+python-pip to install a newer version of pexpect and libcurl4-gnutls-dev for Debian OS Family. Also rh-git29 is installed from software-collections, as VSTS requires a newer version of git.
 
 Role Variables
 --------------
