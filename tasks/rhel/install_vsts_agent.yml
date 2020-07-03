@@ -14,7 +14,7 @@
 - name: Install required software for vsts-agent
   yum:
     name: "{{item}}"
-    state: installed
+    state: present
   with_items:
     - icu
     - libunwind
