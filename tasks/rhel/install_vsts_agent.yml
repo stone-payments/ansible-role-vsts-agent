@@ -30,6 +30,7 @@
   pip:
     name: "{{item}}"
     state: present
+    extra_args: -i https://pypi.python.org/simple
   with_items:
     - pexpect
   when:
