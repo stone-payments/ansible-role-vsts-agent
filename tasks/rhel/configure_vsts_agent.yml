@@ -5,7 +5,7 @@
 - name: Add agent pool to install command (default queue-agent)
   set_fact:
     install_command: "{{ install_command }} --pool {{ vsts_poolname }}"
-  when: vsts_poolname|default("") != "" 
+  when: vsts_poolname|default("") != ""
 
 - name: Add proxy-url to install command
   set_fact:
@@ -15,7 +15,7 @@
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
     install_command: "{{ install_command }} --projectname {{ vsts_projectname}} --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname}} "
-  when: 
+  when:
     - vsts_deploymentgroupname|default("") != ""
     - vsts_projectname|default("") != ""
 
@@ -39,3 +39,5 @@
     chdir: "{{vsts_agentfolder}}"
     creates: "{{vsts_agentfolder}}/.agent"
   become_user: "{{vsts_agent_user}}"
+  when:
+    - not ansible_check_mode
