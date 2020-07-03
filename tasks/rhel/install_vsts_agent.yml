@@ -1,7 +1,7 @@
 ---
 - name: Install centos-release-scl-rh (CentOS only)
   package:
-    name: centos-release-scl-rh
+    name: centos-release-scl
     state: present
   become: true
   when: ansible_distribution == 'CentOS'
