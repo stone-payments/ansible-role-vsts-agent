@@ -18,8 +18,7 @@
   with_items:
     - icu
     - libunwind
-    - rh-git29
-    - python-pip
+    - python2-pip
   become: true
   when:
     - not ansible_check_mode
