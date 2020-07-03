@@ -40,7 +40,9 @@
 
 - name: Include configure vsts-agent tasks
   include_tasks: configure_vsts_agent.yml
-  when: dryrun is not defined
+  when:
+    - not ansible_check_mode
+    - dryrun is not defined
   tags:
     - config
 
@@ -50,7 +52,9 @@
     chdir: "{{vsts_agentfolder}}"
     creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
   become: true
-  when: dryrun is not defined
+  when:
+    - not ansible_check_mode
+    - dryrun is not defined
   tags:
     - config
     - service
@@ -61,6 +65,8 @@
     enabled: yes
     state: started
   become: true
-  when: dryrun is not defined
+  when:
+    - not ansible_check_mode
+    - dryrun is not defined
   tags:
     - service
