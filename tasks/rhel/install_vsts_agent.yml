@@ -19,7 +19,7 @@
     - icu
     - libunwind
     - git
-    - python-pip
+    - python3-pip
   become: true
   tags:
     - pkg
