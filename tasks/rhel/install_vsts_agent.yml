@@ -18,6 +18,7 @@
   with_items:
     - icu
     - libunwind
+    - rh-git29
     - python2-pip
   become: true
   when:
