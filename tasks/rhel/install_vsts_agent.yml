@@ -13,9 +13,10 @@
 
 - name: Install required software for vsts-agent
   yum:
-    name: "{{item}}"
+    name: "{{ packages }}"
     state: present
-  with_items:
+  vars:
+    packages:
     - icu
     - libunwind
     - python2-pip
@@ -27,10 +28,11 @@
 
 - name: Pip install pexpect (we need a new-enough version that isn't packaged in redhat 7.x
   pip:
-    name: "{{item}}"
+    name: "{{ packages }}"
     state: present
     extra_args: -i https://pypi.python.org/simple
-  with_items:
+  vars:
+    packages:
     - pexpect
   when:
     - not ansible_check_mode
