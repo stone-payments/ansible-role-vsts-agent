@@ -30,6 +30,8 @@
     state: present
   with_items:
     - pexpect
+  when:
+    - not ansible_check_mode
   tags:
     - pkg
     - pexpect
