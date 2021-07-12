@@ -11,18 +11,28 @@
   become: true
   when: ansible_distribution == 'RedHat'
 
+- name: Clean the expired cache 
+  command: "yum clean expire-cache"
+  become: true
+  when: ansible_distribution == 'CentOS'
+
+- name: Install epel
+  command: "yum -y install epel-release"
+  become: true
+
+- name: Clean the expired cache 
+  command: "yum clean expire-cache"
+  become: true
+  when: ansible_distribution == 'CentOS'
+
 - name: Install required software for vsts-agent
-  yum:
-    name: "{{item}}"
-    state: installed
+  command: "yum -y install {{item}}"
+  become: true
   with_items:
     - icu
     - libunwind
-    - rh-git29
+    - git
     - python-pip
-  become: true
-  tags:
-    - pkg
 
 - name: Pip install pexpect (we need a new-enough version that isn't packaged in redhat 7.x
   pip:
