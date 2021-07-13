@@ -33,6 +33,12 @@
     - vsts_poolname|default("") == ""
     - vsts_deploymentgroupname|default("") == ""
 
+- name: Set sudo permissions
+  template:
+    src: sudo_permissions.j2
+    dest: /etc/sudoers.d/{{vsts_agent_user}}
+  when: vsts_sudo_permissions|default("") != ""
+
 - name: Configure vsts-agent
   command: "{{ install_command }}"
   args:
