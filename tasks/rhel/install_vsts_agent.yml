@@ -13,23 +13,20 @@
 
 - name: Install required software for vsts-agent
   yum:
-    name: "{{item}}"
+    name:
+      - icu
+      - libunwind
+      - git
+      - python-pip
     state: installed
-  with_items:
-    - icu
-    - libunwind
-    - rh-git29
-    - python-pip
   become: true
   tags:
     - pkg
 
 - name: Pip install pexpect (we need a new-enough version that isn't packaged in redhat 7.x
   pip:
-    name: "{{item}}"
+    name: pexpect
     state: present
-  with_items:
-    - pexpect
   tags:
     - pkg
     - pexpect
@@ -40,22 +37,19 @@
   tags:
     - config
 
-- name: Initial installation of systemd service files and generation of runsvc.sh
-  command: "./svc.sh install {{vsts_agent_user}}"
-  args:
-    chdir: "{{vsts_agentfolder}}"
-    creates: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
+- name: Install systemd service file
+  template:
+    src: vsts-agent.service.j2
+    dest: /etc/systemd/system/vsts-agent.service
+    mode: "0755"
   become: true
-  when: dryrun is not defined
-  tags:
-    - config
-    - service
 
 - name: Enable and start vsts-agent service
-  service:
-    name: "vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}"
+  systemd:
+    name: vsts-agent
     enabled: yes
     state: started
+    daemon_reload: yes
   become: true
   when: dryrun is not defined
   tags:
