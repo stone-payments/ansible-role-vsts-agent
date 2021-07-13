@@ -17,7 +17,7 @@ vsts_poolname: ""
 vsts_deploymentgroupname: ""
 vsts_proxyurl: ""
 
-vsts_server_url: "https://{{ vsts_accountname }}.visualstudio.com/"
+vsts_server_url: "https://dev.azure.com/{{ vsts_accountname }}"
 vsts_agent_name: "{{ ansible_hostname }}"
 vsts_agentfolder: "/home/{{ vsts_agent_user }}/agent/"
 vsts_workfolder: "/home/{{ vsts_agent_user }}/work/"
