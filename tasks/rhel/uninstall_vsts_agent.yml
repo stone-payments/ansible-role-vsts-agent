@@ -1,20 +1,38 @@
 ---
-  - name: Unconfigure vsts-agent - remove service
-    command: "./svc.sh uninstall"
-    args:
-      chdir: "{{vsts_agentfolder}}"
-      removes: "/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service"
-    when: vsts_remove|bool
+  - name: Disable vsts-agent systemd service
+    service:
+      name: vsts-agent
+      enabled: no
+      state: stopped
     become: true
+    when: vsts_remove|bool
     tags:
       - service
       - unconfig
 
+  - name: Remove vsts-agent systemd service file
+    file:
+      path: /etc/systemd/system/vsts-agent.service
+      state: absent
+    become: true
+
   - name: Unconfigure vsts-agent
-    command: "./config.sh remove --unattended --auth PAT --token {{vsts_accesstoken}}"
+    command: "./config.sh remove --unattended --auth PAT --token $VSTS_ACCESSTOKEN"
     args:
       chdir: "{{vsts_agentfolder}}"
+    environment:
+      VSTS_ACCESSTOKEN: "{{ vsts_accesstoken }}"
     become_user: "{{vsts_agent_user}}"
+    no_log: true
     when: vsts_remove|bool
     tags:
-      - unconfig    
+      - unconfig
+  
+  - name: Remove vsts-agent folders
+    file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+      - "{{ vsts_agentfolder }}"
+      - "{{ vsts_workfolder }}"
+    become: true
