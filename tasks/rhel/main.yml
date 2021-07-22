@@ -1,6 +1,6 @@
 ---
 - name: Check if vsts agent service already installed
-  stat: path="/etc/systemd/system/vsts.agent.{{ vsts_accountname }}.{{ vsts_agent_name }}.service" 
+  stat: path="/etc/systemd/system/vsts-agent.service" 
   register: vsts_service_result
   failed_when: vsts_service_result is not defined
   ignore_errors: yes

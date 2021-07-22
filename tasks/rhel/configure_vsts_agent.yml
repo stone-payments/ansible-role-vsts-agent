@@ -1,6 +1,6 @@
 - name: Register base install command as fact in variable install_command
   set_fact:
-    install_command: "./config.sh --unattended --acceptteeeula --url {{vsts_server_url}} --auth PAT --token {{vsts_accesstoken}} --agent {{vsts_agent_name}} --work {{vsts_workfolder}} --replace"
+    install_command: "./config.sh --acceptteeeula --url {{vsts_server_url}} --auth PAT --token {{vsts_accesstoken}} --agent {{vsts_agent_name}} --work {{vsts_workfolder}} --runasservice"
 
 - name: Add agent pool to install command (default queue-agent)
   set_fact:
@@ -40,6 +40,12 @@
   when:
     - vsts_poolname|default("") == ""
     - vsts_deploymentgroupname|default("") == ""
+
+- name: Set sudo permissions
+  template:
+    src: sudo_permissions.j2
+    dest: /etc/sudoers.d/{{vsts_agent_user}}
+  when: vsts_sudo_permissions|default("") != ""
 
 - name: Configure vsts-agent
   command: "{{ install_command }}"

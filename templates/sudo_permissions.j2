@@ -1,0 +1,6 @@
+Defaults:{{ vsts_agent_user }} !requiretty
+Defaults:{{ vsts_agent_user }} visiblepw
+
+{% for command in vsts_sudo_permissions -%}
+  {{ vsts_agent_user + ' ALL=(ALL) NOPASSWD: ' + command }}
+{% endfor %}

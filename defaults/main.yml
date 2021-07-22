@@ -24,3 +24,11 @@ vsts_workfolder: "/home/{{ vsts_agent_user }}/work/"
 
 vsts_remove: false
 vsts_reinstall: false
+
+vsts_sudo_permissions:
+  - /bin/systemctl reload vsts-agent
+  - /bin/systemctl status vsts-agent
+  - /bin/systemctl start vsts-agent
+  - /bin/systemctl restart vsts-agent
+  - /bin/systemctl stop vsts-agent
+  - /bin/systemctl daemon-reload
