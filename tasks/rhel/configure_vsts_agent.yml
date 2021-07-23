@@ -1,6 +1,6 @@
 - name: Register base install command as fact in variable install_command
   set_fact:
-    install_command: "./config.sh --acceptteeeula --url {{vsts_server_url}} --auth PAT --token {{vsts_accesstoken}} --agent {{vsts_agent_name}} --work {{vsts_workfolder}} --runasservice"
+    install_command: "./config.sh --unattended --acceptteeeula --url {{vsts_server_url}} --auth PAT --token {{vsts_accesstoken}} --agent {{vsts_agent_name}} --work {{vsts_workfolder}} --runasservice --replace"
 
 - name: Add agent pool to install command (default queue-agent)
   set_fact:
