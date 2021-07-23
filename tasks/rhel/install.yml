@@ -89,3 +89,7 @@
   when: dryrun is not defined
   tags:
     - service
+
+- name: Check service status
+  command: systemctl status vsts-agent
+  changed_when: False
