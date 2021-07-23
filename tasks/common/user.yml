@@ -1,0 +1,38 @@
+- set_fact:
+    vsts_state: "{{ 'absent' if vsts_action == 'uninstall' else 'present' }}"
+
+- name: "{{ vsts_action }} {{ vsts_agent_user }} user"
+  user:
+    name: "{{ vsts_agent_user }}"
+    groups: wheel
+    state: "{{ vsts_state }}"
+
+- name: Set sudo permissions
+  template:
+    src: sudo_permissions.j2
+    dest: "/etc/sudoers.d/{{ vsts_agent_user }}"
+  when:
+    - vsts_sudo_permissions|default("") != ""
+    - vsts_state == 'present'
+
+- name: Remove sudo permissions
+  file:
+    state: absent
+    path: "/etc/sudoers.d/{{ vsts_agent_user }}"
+  when: vsts_state == 'absent'
+
+- name: "{{ vsts_action }} directories"
+  file:
+    state: "{{ 'absent' if vsts_action == 'uninstall' else 'directory' }}"
+    path: "{{item}}"
+    owner: "{{ vsts_agent_user }}"
+    group: "{{ vsts_agent_user }}"
+    mode: 0755
+  with_items:
+    - "/home/{{ vsts_agent_user }}"
+    - "{{ vsts_agentfolder }}"
+    - "{{ vsts_workfolder }}"
+  tags:
+    - homedir
+
+

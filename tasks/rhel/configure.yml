@@ -14,7 +14,7 @@
 
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
-    install_command: "{{ install_command }} --projectname {{ vsts_projectname}} --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname}} "
+    install_command: "{{ install_command }} --projectname {{ vsts_projectname }} --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname }} "
   register: deployment_group_set
   when: 
     - vsts_deploymentgroupname|default("") != ""
@@ -40,12 +40,6 @@
   when:
     - vsts_poolname|default("") == ""
     - vsts_deploymentgroupname|default("") == ""
-
-- name: Set sudo permissions
-  template:
-    src: sudo_permissions.j2
-    dest: /etc/sudoers.d/{{vsts_agent_user}}
-  when: vsts_sudo_permissions|default("") != ""
 
 - name: Configure vsts-agent
   command: "{{ install_command }}"
