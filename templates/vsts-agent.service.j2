@@ -3,7 +3,7 @@ Description=Azure Pipelines Agent
 After=network.target
 
 [Service]
-ExecStart={{vsts_agentfolder}}bin/runsvc.sh
+ExecStart={{vsts_agentfolder}}/bin/runsvc.sh
 User={{vsts_agent_user}}
 WorkingDirectory={{vsts_agentfolder}}
 KillMode=process
