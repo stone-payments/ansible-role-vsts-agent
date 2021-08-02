@@ -2,7 +2,7 @@
   - name: Check if vsts config.sh exists
     stat: path={{ vsts_agentfolder }}/config.sh
     register: config_file
-    failed_when: vsts_agentfolder_result is not defined
+    failed_when: config_file is not defined
     ignore_errors: yes
 
   - name: Unconfigure vsts-agent
