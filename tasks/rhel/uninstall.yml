@@ -1,8 +1,8 @@
 ---
-  - name: Check if vsts agent path exists
-    stat: path={{ vsts_agentfolder }}
-    register: vsts_agentfolder_result
-    failed_when: vsts_agentfolder_result is not defined
+  - name: Check if vsts config.sh exists
+    stat: path={{ vsts_agentfolder }}/config.sh
+    register: config_file
+    failed_when: config_file is not defined
     ignore_errors: yes
 
   - name: Unconfigure vsts-agent
@@ -12,7 +12,7 @@
     environment:
       VSTS_ACCESSTOKEN: "{{ vsts_accesstoken }}"
     become_user: "{{vsts_agent_user}}"
-    when: vsts_agentfolder_result.stat.exists
+    when: config_file.stat.exists
     no_log: true
     tags:
       - unconfig
