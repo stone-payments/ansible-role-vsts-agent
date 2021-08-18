@@ -42,6 +42,28 @@ Including an example of how to use your role (for instance, with variables passe
       roles:
          - { role: angrox.vsts-agent }
 
+
+Example Playbook for Windows
+----------------------------
+    - hosts: servers
+      roles:
+        - role: angrox.vsts-agent
+          vars:
+            ## URL of the Azure DevOps Server
+            vsts_server_url: https://devops.example.com/tfs/
+            vsts_poolname: My Agent Pool
+            ## Either vsts_agent_user and vsts_agent_password must be defined or vsts_accesstoken
+            ## if both are defined it takes the token
+            vsts_agent_user: "vsts_user1@example.com"
+            vsts_agent_password: "RandomPassword"
+            #vsts_accesstoken: myverylongtoken
+            ## If the vsts-agent should run with a specific account the variables vsts_agent_windowsservice_user and vsts_agent_windowsservice_password must defined.
+            ## When undefined it will run as Network Service
+            #vsts_agent_windowsservice_user: ""
+            #vsts_agent_windowsservice_password: ""
+            ## To remove the agent set vsts_remove to true. Defaults to false
+            #vsts_remove: true
+
 License
 -------
 
