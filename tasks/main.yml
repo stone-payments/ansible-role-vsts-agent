@@ -6,3 +6,7 @@
 - name: Ansible Configuration for OS Family Rhel
   include_tasks: rhel/main.yml
   when: ansible_os_family == 'RedHat'
+
+- name: Ansible Configuration for OS Family Windows
+  include_tasks: windows/main.yml
+  when: ansible_os_family == 'Windows'

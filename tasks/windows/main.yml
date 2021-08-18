@@ -1,0 +1,31 @@
+---
+- name: Set Windows Workfolder Path
+  set_fact:
+    vsts_workfolder: "{{ vsts_workfolder_windows }}"
+
+- name: Set Windows Workfolder Path
+  set_fact:
+    vsts_agentfolder: "{{ vsts_agentfolder_windows }}"
+
+- name: Check if vsts agent service already installed
+  win_stat:
+    path: "{{ vsts_agentfolder }}\\.agent"
+  register: vsts_service_result
+
+- name: Include uninstall agent tasks
+  include_tasks: uninstall_vsts_agent.yml
+  when:
+    - vsts_service_result.stat.exists
+    - vsts_remove or vsts_reinstall
+
+- name: Include get agent files tasks
+  include_tasks: get_agent_files.yml
+  when:
+    - not vsts_service_result.stat.exists or vsts_reinstall
+    - not vsts_remove
+
+- name: Include install agent tasks
+  include_tasks: install_vsts_agent.yml
+  when:
+    - not vsts_service_result.stat.exists or vsts_reinstall
+    - not vsts_remove

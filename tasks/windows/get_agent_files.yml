@@ -1,0 +1,24 @@
+---
+- name: Create directories
+  win_file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - "{{ vsts_agentfolder_windows }}"
+    - "{{ vsts_workfolder_windows }}"
+
+- name: Get Agent URL
+  include_tasks: ../common/get_agent_url.yml
+  vars:
+    vsts_agent_platform: win-x64
+
+- name: Download agent
+  win_get_url:
+    url: "{{ vsts_agent_fullurl }}"
+    dest: "{{ vsts_workfolder_windows }}\\agent.zip"
+- name: Extract agent
+  win_unzip:
+    src: "{{ vsts_workfolder_windows }}\\agent.zip"
+    dest: "{{ vsts_agentfolder }}"
+    creates: "{{ vsts_agentfolder }}\\config.cmd"
+    delete_archive: true

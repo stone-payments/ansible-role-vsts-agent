@@ -1,0 +1,82 @@
+---
+- name: Register base install command as fact in variable install_command
+  set_fact:
+    install_command: config.cmd --unattended --url "{{ vsts_server_url }}" --runAsService --agent "{{ vsts_agent_name }}" --work "{{ vsts_workfolder }}" --replace
+
+- name: Fail when no logon credentials are given
+  fail:
+    msg: "The vsts_agent_user({{ vsts_agent_user }}) and vsts_agent_password vars are required"
+  when:
+    - vsts_agent_user is not defined
+    - vsts_agent_password is not defined
+    - vsts_accesstoken is not defined
+
+# Set Windows Service Credentials under which to run the service. If unset, Network Service will be used
+- name: Add Service Credentials
+  set_fact:
+    install_command: '{{ install_command }} --windowsLogonAccount "{{ vsts_agent_windowsservice_user }}" --windowsLogonPassword "{{ vsts_agent_windowsservice_password }}"'
+  when:
+    - vsts_agent_windowsservice_user | default("") != "" 
+    - vsts_agent_windowsservice_password | default("") != "" 
+
+## Service Identity and Access Identity:
+## Whenever vsts_agent_user and vsts_agent_password are given, the service will run under that account, otherwise as Network Service
+## When vsts_accesstoken is given it will be used to access the server, otherwise the service-credentials will be used
+- name: Add Server Token Access
+  set_fact:
+    install_command: '{{ install_command }} --auth PAT --token "{{ vsts_accesstoken }}"'
+  when: vsts_accesstoken is defined
+
+- name: Add Server negotiate Access as fallback
+  set_fact:
+    install_command: '{{ install_command }} --auth negotiate --userName "{{ vsts_agent_user }}" --password "{{ vsts_agent_password }}"'
+  when:
+    - vsts_accesstoken is not defined
+    - vsts_agent_user is defined
+    - vsts_agent_password is defined
+
+- name: Add agent pool to install command (default queue-agent)
+  set_fact:
+    install_command: '{{ install_command }} --pool "{{ vsts_poolname }}"'
+  when: vsts_poolname|default("") != "" 
+
+- name: Add deployment group info to install command (deployment group agent)
+  set_fact:
+    install_command: '{{ install_command }} --projectname "{{ vsts_projectname }}" --deploymentgroup --deploymentgroupname "{{ vsts_deploymentgroupname }}"'
+  when:
+    - vsts_deploymentgroupname|default("") != ""
+    - vsts_projectname|default("") != ""
+
+- name: Fail for conflicting options for default agent x deployment agent
+  fail:
+    msg: "The vsts_poolname({{ vsts_poolname }}) and vsts_deploymentgroupname({{ vsts_deploymentgroupname }}) vars are present at same time, choose one of them to install the default queue/build agent or the deployment group agent."
+  when:
+    - vsts_poolname|default("") != ""
+    - vsts_deploymentgroupname|default("") != ""
+
+- name: Fail for missing parameters in install command
+  fail:
+    msg: "Neither the vsts_poolname({{ AGENT_POOL }}) or the vsts_deploymentgroupname({{ vsts_deploymentgroupname }}) vars are present, choose one of them to install the default queue/build agent or the deployment group agent."
+  when:
+    - vsts_poolname|default("") == ""
+    - vsts_deploymentgroupname|default("") == ""
+
+# - name: Output install command to temp file
+#   win_copy:
+#     dest: '{{ vsts_agentfolder }}\temp_ansible_install.cmd'
+#     content: '{{ install_command }}'
+# - name: Configure vsts-agent
+#   win_shell: 'temp_ansible_install.cmd'
+#   args:
+#     executable: cmd
+#     chdir: '{{ vsts_agentfolder }}'
+#     creates: '{{ vsts_agentfolder }}\.agent'
+# - name: Remove temp File
+#   win_file:
+#     path: '{{ vsts_agentfolder }}\temp_ansible_install.cmd'
+#     state: absent
+- name: Configure vsts-agent
+  win_command: '{{ install_command }}'
+  args:
+    chdir: '{{ vsts_agentfolder }}'
+    creates: '{{ vsts_agentfolder }}\.agent'

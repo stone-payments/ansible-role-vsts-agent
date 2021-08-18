@@ -1,0 +1,28 @@
+---
+- name: Register base uninstall command as fact in variable uninstall_command
+  set_fact:
+    uninstall_command: "config.cmd remove --unattended"
+
+- name: Add uninstall command with token
+  set_fact:
+    uninstall_command: "{{ uninstall_command }} --auth PAT --token {{ vsts_accesstoken }}"
+  when:
+  - vsts_accesstoken | default("") != ""
+
+- name: Add uninstall command with username/password
+  set_fact:
+    uninstall_command: "{{ uninstall_command }} --auth negotiate --userName {{ vsts_agent_user }} --password {{ vsts_agent_password }}"
+  when:
+  - vsts_accesstoken | default("") == ""
+  - vsts_agent_user | default("") != ""
+  - vsts_agent_password | default("") != ""
+
+- name: Unconfigure vsts-agent
+  win_command: "{{ uninstall_command }}"
+  args:
+    chdir: "{{ vsts_agentfolder }}"
+    removes: "{{ vsts_agentfolder }}\\.agent"
+  when:
+    - vsts_remove | bool
+  tags:
+    - unconfig

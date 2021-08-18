@@ -1,0 +1,35 @@
+---
+- block:  # Linux-Block
+  # 1. Download Release-Infos
+  - name: Get Release Information
+    uri:
+      url: https://api.github.com/repos/Microsoft/vsts-agent/releases/latest
+      return_content: true
+    register: vsts_releases
+  # 2. Grab assets.json-url from Release-Infos and Download assets.json-file. In that file we'll find the actual download URLs
+  - name: Get Download URL-Json
+    uri:
+      url: "{{ vsts_releases.json | json_query('assets[*].browser_download_url') | first }}"
+      body_format: json
+      return_content: true
+    register: vsts_releases
+  when: ansible_os_family != 'Windows'
+- block:  # Windows-Block
+  - name: Get Release Information
+    win_uri:
+      url: https://api.github.com/repos/Microsoft/vsts-agent/releases/latest
+      return_content: true
+    register: vsts_releases
+  # 2. Grab assets.json-url from Release-Infos and Download assets.json-file. In that file we'll find the actual download URLs
+  - name: Get Download URL-Json
+    win_uri:
+      url: "{{ vsts_releases.json | json_query('assets[*].browser_download_url') | first }}"
+      return_content: true
+    register: vsts_releases
+  when: ansible_os_family == 'Windows'
+# Grab download URL for vsts-agent
+- name: Set Download URL from json
+  set_fact:
+    vsts_agent_fullurl: "{{ vsts_releases.content | from_json | json_query(jmespath_query) | first }}"
+  vars:
+    jmespath_query: '[? platform == `"{{ vsts_agent_platform }}"` && starts_with(name, `"vsts"`)].downloadUrl'

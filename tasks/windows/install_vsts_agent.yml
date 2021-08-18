@@ -1,0 +1,4 @@
+---
+- name: Include configure vsts-agent tasks
+  include_tasks: configure_vsts_agent.yml
+  when: dryrun is not defined 

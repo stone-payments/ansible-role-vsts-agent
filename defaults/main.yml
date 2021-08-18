@@ -23,6 +23,14 @@ vsts_agent_name: "{{ ansible_hostname }}"
 vsts_agentfolder: "/opt/vsts-agent"
 vsts_workfolder: "/home/{{ vsts_agent_user }}/work"
 
+# Agentfolder and Workfolder for Windows-Systems. Defaults to C:\vsts-agent\...
+vsts_agentfolder_windows: "{{ ansible_env.SystemDrive }}\\vsts-agent\\{{ vsts_agent_user }}"
+vsts_workfolder_windows: "{{ ansible_env.SystemDrive }}\\vsts-agent\\{{ vsts_agent_user }}\\work"
+
+# Service Account and password of the vsts-service. If not set, Network Service will be used
+vsts_agent_windowsservice_user: ""
+vsts_agent_windowsservice_password: ""
+
 vsts_remove: false
 vsts_reinstall: false
 
