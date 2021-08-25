@@ -14,7 +14,7 @@
 
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
-    install_command: "{{ install_command }} --projectname {{ vsts_projectname }} --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname }} "
+    install_command: "{{ install_command }} --projectname '{{ vsts_projectname }}' --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname }} "
   register: deployment_group_set
   when: 
     - vsts_deploymentgroupname|default("") != ""
@@ -27,19 +27,29 @@
     - deployment_group_set is succeeded
     - vsts_deploymentgrouptags|default("") != ""
 
-- name: Fail for conflicting options for default agent x deployment agent
+- name: Add environment info to install command
+  set_fact:
+    install_command: "{{ install_command }} --projectname '{{ vsts_projectname }}' --environment --environmentname {{ vsts_environmentname }} "
+  register: environment_set
+  when: 
+    - vsts_environmentname|default("") != ""
+    - vsts_projectname|default("") != ""
+
+- name: Fail for conflicting options for default agent x deployment agent x environment resource
   fail:
-    msg: "The vsts_poolname({{ vsts_poolname }}) and vsts_deploymentgroupname({{ vsts_deploymentgroupname }}) vars are present at same time, choose one of them to install the default queue/build agent or the deployment group agent."
+    msg: "More than one agent type was found. Choose one of them to install. Options: vsts_poolname({{ vsts_poolname }}), vsts_deploymentgroupname({{ vsts_deploymentgroupname }}), vsts_environmentname({{ vsts_environmentname }})"
   when:
     - vsts_poolname|default("") != ""
     - vsts_deploymentgroupname|default("") != ""
+    - vsts_environmentname|default("") == ""
 
 - name: Fail for missing parameters in install command
   fail:
-    msg: "Neither the vsts_poolname({{ AGENT_POOL }}) or the vsts_deploymentgroupname({{ vsts_deploymentgroupname }}) vars are present, choose one of them to install the default queue/build agent or the deployment group agent."
+    msg: "Neither the vsts_poolname({{ AGENT_POOL }}) or the vsts_deploymentgroupname({{ vsts_deploymentgroupname }})  or vsts_environmentname({{ vsts_environmentname }}) vars are present, choose one of them to install."
   when:
     - vsts_poolname|default("") == ""
     - vsts_deploymentgroupname|default("") == ""
+    - vsts_environmentname|default("") == ""
 
 - name: Configure vsts-agent
   command: "{{ install_command }}"
