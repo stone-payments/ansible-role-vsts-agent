@@ -12,10 +12,14 @@ vsts_agent_user: "vstsuser"
 vsts_action: install
 
 vsts_accountname: "ENTERYOURACCOUNTNAME"
-#ENTERYOURPOOLNAME
+#To use Pool Name
 vsts_poolname: ""
 # To use Deployment Group
 vsts_deploymentgroupname: ""
+# To use Environment
+vsts_environmentname: ""
+vsts_accesstoken: "ENTERYOURTOKEN"
+vsts_projectname: "ENTERYOURPROJECTNAME"
 vsts_proxyurl: ""
 
 vsts_server_url: "https://dev.azure.com/{{ vsts_accountname }}"
