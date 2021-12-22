@@ -49,7 +49,10 @@ ansible-galaxy install -r requirements.yml
   roles:
     - role: stone-payments.vsts-agent
       vars:
+        vsts_accountname: accountname
         vsts_environmentname: "AppName-Production-DC1"
+        vsts_accesstoken: "yourtoken"
+        vsts_projectname: "Project-Name"
         vsts_sudo_permissions:
           - /bin/rm -rf /opt/apps/*
           - /bin/bash /home/vstsuser/work/_temp/*.sh
