@@ -40,7 +40,7 @@
     install_command: "{{ install_command }} --addvirtualmachineresourcetags --virtualmachineresourcetags {{ vsts_virtualmachineresourcetags|quote }} "
   when:
     - environment_set is succeeded
-    - vsts_virtualmachineresourcetags|default("") != ""
+    - vsts_virtualmachineresourcetags | string
 
 - name: Fail for conflicting options for default agent x deployment agent x environment resource
   fail:

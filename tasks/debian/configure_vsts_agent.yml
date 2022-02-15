@@ -19,6 +19,13 @@
     - vsts_deploymentgroupname|default("") != ""
     - vsts_projectname|default("") != ""
 
+- name: Add virtual machine resource tags to install command
+  set_fact:
+    install_command: "{{ install_command }} --addvirtualmachineresourcetags --virtualmachineresourcetags {{ vsts_virtualmachineresourcetags|quote }} "
+  when:
+    - environment_set is succeeded
+    - vsts_virtualmachineresourcetags | string
+
 - name: Fail for conflicting options for default agent x deployment agent
   fail:
     msg: "The vsts_poolname({{ vsts_poolname }}) and vsts_deploymentgroupname({{ vsts_deploymentgroupname }}) vars are present at same time, choose one of them to install the default queue/build agent or the deployment group agent."
