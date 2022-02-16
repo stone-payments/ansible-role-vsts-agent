@@ -24,6 +24,7 @@ vsts_server_url: "https://dev.azure.com/{{ vsts_accountname }}"
 vsts_agent_name: "{{ ansible_hostname }}"
 vsts_agentfolder: "/opt/vsts-agent"
 vsts_workfolder: "/home/{{ vsts_agent_user }}/work"
+vsts_apps_dir: "/opt/apps"
 
 vsts_remove: false
 vsts_reinstall: false

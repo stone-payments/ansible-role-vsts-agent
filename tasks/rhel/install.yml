@@ -93,3 +93,11 @@
 - name: Check service status
   command: systemctl status vsts-agent
   changed_when: False
+
+- name: Create apps directory
+  file:
+    path: "{{ vsts_apps_dir }}"
+    owner: "{{ vsts_agent_user }}"
+    group: "{{ vsts_agent_user }}"
+    mode: 0755
+    state: directory
