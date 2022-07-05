@@ -17,7 +17,7 @@
       - icu
       - libunwind
       - git
-      - python-pip
+      - "{{ 'python3-pip' if ansible_distribution == 'OracleLinux' else 'python-pip' }}"
     state: installed
   become: true
   tags:
