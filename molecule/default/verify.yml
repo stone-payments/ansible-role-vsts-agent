@@ -1,0 +1,7 @@
+---
+- name: Verify
+  hosts: all
+  roles:
+    - role: stone-payments.vsts-agent
+      vsts_agent_user: root
+      dryrun: true
