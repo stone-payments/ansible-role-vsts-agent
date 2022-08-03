@@ -1,34 +1,55 @@
 ---
-# This is the API URL to get the latest release
-vsts_github_api: "https://api.github.com/repos/Microsoft/vsts-agent/releases/latest"
-
-# If vsts_agent_fullurl is set this specific version will be downloaded instead of latest
-# https://vstsagentpackage.azureedge.net/agent/2.129.0/vsts-agent-linux-x64-2.129.0.tar.gz
-vsts_agent_version: "2.200.2"
+# Defaults configs for stone-payments.win-vsts-agent
+vsts_agent_arch: x64
+vsts_agent_version: 2.200.2
 vsts_agent_baseurl: "https://vstsagentpackage.azureedge.net/agent"
-vsts_agent_file: "vsts-agent-linux-x64-{{ vsts_agent_version }}.tar.gz"
-vsts_agent_fullurl: "{{ vsts_agent_baseurl }}/{{ vsts_agent_version }}/{{ vsts_agent_file }}"
-vsts_agent_user: "vstsuser"
-vsts_action: install
 
-vsts_accountname: "ENTERYOURACCOUNTNAME"
-#ENTERYOURPOOLNAME
-vsts_poolname: ""
-# To use Deployment Group
-vsts_deploymentgroupname: ""
-vsts_proxyurl: ""
-
-vsts_virtualmachineresourcetags: ""
-
-vsts_server_url: "https://dev.azure.com/{{ vsts_accountname }}"
-vsts_agent_name: "{{ ansible_hostname }}"
-vsts_agentfolder: "/opt/vsts-agent"
-vsts_workfolder: "/home/{{ vsts_agent_user }}/work"
-vsts_apps_dir: "/opt/apps"
-
+# Pass true to uninstall VSTS agent
 vsts_remove: false
+
+# Pass true to reinstall VSTS agent
 vsts_reinstall: false
 
+# Pass true to reconfigure VSTS agent
+vsts_reconfigure: false
+
+# Specific configs
+vsts_accountname: ""
+vsts_accesstoken: ""
+vsts_projectname: ""
+vsts_agent_name: "{{ inventory_hostname }}"
+
+# To use Agent pool (queue agent).
+vsts_poolname: ""
+
+# To use Deployment Group
+vsts_deploymentgroupname: ""
+
+# To use Environment
+vsts_environmentname: ""
+
+# Configure proxy address
+vsts_proxyurl: ""
+vsts_proxy_username: ""
+vsts_proxy_password: ""
+vsts_proxy_bypass: ""
+
+# Configure default tags per resource type
+vsts_virtualmachineresourcetags: ""
+vsts_deploymentgrouptags: ""
+
+# Specific Environment variables for agent
+vsts_environment_variables: []
+
+# Specific Windows user account to run the service.
+vsts_windows_account: "NT AUTHORITY\\SYSTEM"
+vsts_windows_account_password: ""
+vsts_windows_service_name: "vstsagent.{{ vsts_accountname }}"
+
+# Specific Linux user to run the service.
+vsts_agent_user: "vsts"
+
+# Specific Linux SUDO permissions.
 vsts_sudo_permissions:
   - /bin/systemctl reload vsts-agent
   - /bin/systemctl status vsts-agent
