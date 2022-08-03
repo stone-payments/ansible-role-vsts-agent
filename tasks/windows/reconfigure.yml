@@ -1,0 +1,40 @@
+---
+- name: Stop VSTS agent service
+  win_service:
+    name: "{{ vsts_windows_service_name }}"
+    state: stopped
+
+- name: Unconfigure VSTS agent
+  win_shell: ".\\config.cmd remove --unattended --auth PAT --token {{ vsts_accesstoken }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+  no_log: true
+
+- name: Remove VSTS agent service
+  win_service:
+    name: "{{ vsts_windows_service_name }}"
+    state: absent
+
+- name: Include tasks to configure VSTS agent
+  include_tasks: "../common/configure.yml"
+  when: dryrun is not defined
+  tags: config
+
+- name: Reconfigure VSTS agent
+  win_command: "{{ vsts_install_command }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+    creates: "{{ vsts_agent_folder }}\\.agent"
+  no_log: true
+  notify: restart vsts-agent windows service
+
+- name: Force recreate VSTS agent service
+  win_service:
+    name: "{{ vsts_windows_service_name }}"
+    display_name: "{{ vsts_service_description }}"
+    description: "{{ vsts_service_description }}"
+    path: "{{ vsts_agent_folder }}\\bin\\AgentService.exe"
+    start_mode: auto
+    state: started
+    username: "{{ vsts_windows_account }}"
+    password: "{{ (vsts_windows_account_password | length > 0) | ternary(vsts_windows_account_password, omit)}}"

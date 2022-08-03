@@ -1,0 +1,20 @@
+---
+- name: Check if exists any vsts agent service already installed
+  ansible.windows.win_service_info:
+    name: vstsagent*
+  register: vsts_service_result
+
+- block:
+    - name: Set current version, if installed
+      win_command: .\Agent.Listener.exe --version
+      args:
+        chdir: "{{ vsts_service_result.services[0].path | win_dirname }}"
+      changed_when: false
+      register: vsts_current_version
+
+    - name: Compare VSTS agent version to apply upgrade
+      set_fact:
+        vsts_upgrade_version: "{{ (vsts_current_version.stdout | trim) is version(vsts_agent_version, 'lt') }}"
+  when:
+    - vsts_service_result.services | length > 0
+    - not vsts_remove
