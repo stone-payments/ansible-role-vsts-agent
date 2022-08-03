@@ -10,7 +10,7 @@ driver:
   provider:
     name: virtualbox
 platforms:
-  - name: windows2016
+  - name: windows2016.molecule.local
     box: jacqinthebox/windowsserver2016core
     memory: 2048
     cpus: 2
@@ -27,8 +27,6 @@ provisioner:
         vsts_accountname: ${VSTS_ACCOUNTNAME}
         vsts_accesstoken: ${VSTS_ACCESSTOKEN}
         vsts_projectname: ${VSTS_PROJECTNAME}
-        vsts_deploymentgroupname: "dg-test-ansible-role"
-        vsts_deploymentgrouptags: "group01"
   connection_options:
     ansible_connection: winrm
     ansible_port: 55985
