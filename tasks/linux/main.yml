@@ -1,0 +1,47 @@
+---
+- name: Include Linux variables
+  include_vars: linux.yml
+
+- name: Check if VSTS is installed
+  include_tasks: check.yml
+
+- name: Force reinstall when we must upgrade agent
+  set_fact:
+    vsts_reinstall: true
+  when:
+    - not (vsts_reinstall | bool)
+    - vsts_upgrade_version | default(false)
+
+- name: Include uninstall agent tasks
+  include_tasks: uninstall.yml
+  when: (vsts_remove | bool) or (vsts_reinstall | bool)
+
+- block:
+    - name: Install required packages
+      include_tasks: packages.yml
+
+    - name: Include install agent tasks
+      include_tasks: install.yml
+  when:
+    - (vsts_reinstall | bool) or (vsts_service_result.stat.exists is false)
+    - vsts_remove | bool is false
+
+- name: Include reconfigure agent tasks
+  include_tasks: reconfigure.yml
+  when:
+    - vsts_service_result.stat.exists
+    - vsts_reconfigure | bool
+
+- block:
+    - name: Setting .proxybypass file
+      template:
+        src: proxy_bypass.j2
+        dest: "{{ vsts_agent_folder }}/.proxybypass"
+      notify: restart vsts-agent systemd service
+
+    - name: Setting .env file
+      template:
+        src: env_variables.j2
+        dest: "{{ vsts_agent_folder }}/.env"
+      notify: restart vsts-agent systemd service
+  when: vsts_remove | bool is false

@@ -1,0 +1,47 @@
+---
+- name: Install centos-release-scl-rh (CentOS only)
+  package:
+    name: centos-release-scl-rh
+    state: present
+  become: true
+  when:
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version | int < 8
+
+- name: Enables SCL (RHEL only)
+  command: "yum-config-manager --enable rhel-server-rhscl-{{ ansible_distribution_major_version }}-rpms"
+  become: true
+  changed_when: false
+  when: ansible_distribution == 'RedHat'
+
+- name: Install required software for vsts-agent (RHEL family only)
+  yum:
+    name:
+      - icu
+      - libunwind
+      - git
+      - "{{ 'python3-pip' if (ansible_distribution_major_version | int >= 8) else 'python-pip' }}"
+    state: installed
+  become: true
+  tags: pkg
+  when: ansible_os_family == 'RedHat'
+
+- name: Install required software for vsts-agent (Debian family only)
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - "{{ 'python3-pip' if (ansible_distribution_major_version | int >= 20) else 'python-pip' }}"
+    - python-pexpect
+    - libcurl4-gnutls-dev
+    - git
+  become: true
+  when: ansible_os_family == 'Debian'
+
+- name: Pip install pexpect (we need a new-enough version that isn't packaged in redhat)
+  pip:
+    name: pexpect
+    state: present
+  tags:
+    - pkg
+    - pexpect

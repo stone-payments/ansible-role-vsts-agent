@@ -1,0 +1,24 @@
+---
+- name: Unconfigure VSTS agent
+  command: "./config.sh remove --unattended --auth PAT --token {{ vsts_accesstoken }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+  become: true
+  become_user: "{{ vsts_agent_user }}"
+  no_log: true
+  tags: unconfig
+
+- name: Include tasks to configure VSTS agent
+  include_tasks: "../common/configure.yml"
+  when: dryrun is not defined
+  tags: config
+
+- name: Configure VSTS agent
+  command: "{{ vsts_install_command }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+    creates: "{{ vsts_agent_folder }}/.agent"
+  become: true
+  become_user: "{{ vsts_agent_user }}"
+  no_log: true
+  notify: restart vsts-agent systemd service
