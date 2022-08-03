@@ -1,2 +1,18 @@
 ---
-# handlers file for vsts-agent
+- name: systemd daemon-reload
+  systemd:
+    daemon_reload: true
+
+- name: restart vsts-agent systemd service
+  systemd:
+    name: vsts-agent
+    state: restarted
+    daemon_reload: true
+  become: true
+  when: dryrun is not defined
+
+- name: restart vsts-agent windows service
+  win_service:
+    name: "{{ vsts_windows_service_name }}"
+    state: restarted
+  when: dryrun is not defined
