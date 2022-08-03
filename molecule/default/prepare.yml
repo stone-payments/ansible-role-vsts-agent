@@ -1,0 +1,23 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install required packages Debian
+      apt:
+        name:
+          - net-tools
+          - glibc-source
+          - sudo
+        state: present
+        update_cache: true
+      when: ansible_os_family == 'Debian'
+
+    - name: Install required packages RedHat
+      package:
+        name:
+          - net-tools
+          - glibc-common
+          - sudo
+          - epel-release
+        state: present
+      when: ansible_os_family == 'RedHat'

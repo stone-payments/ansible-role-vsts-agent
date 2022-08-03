@@ -1,0 +1,48 @@
+---
+dependency:
+  name: galaxy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+driver:
+  name: podman
+platforms:
+  - name: centos7.molecule.local
+    image: docker.io/pycontribs/centos:7
+    command: /sbin/init
+    pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: centos8.molecule.local
+    image: quay.io/centos/centos:stream8
+    command: /sbin/init
+    pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  - name: ubuntu.molecule.local
+    image: docker.io/geerlingguy/docker-ubuntu2004-ansible
+    command: /lib/systemd/systemd
+    pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        vsts_agent_version: 2.206.1
+        vsts_accountname: ${VSTS_ACCOUNTNAME}
+        vsts_accesstoken: ${VSTS_ACCESSTOKEN}
+        vsts_projectname: ${VSTS_PROJECTNAME}
+verifier:
+  name: ansible
