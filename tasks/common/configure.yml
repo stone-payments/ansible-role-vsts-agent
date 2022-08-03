@@ -5,7 +5,7 @@
 
 - name: Register base install command as fact in variable vsts_install_command
   set_fact:
-    vsts_install_command: "{{ vsts_install_command }} --unattended --acceptteeeula --url {{ vsts_server_url }} --auth PAT --token {{ vsts_accesstoken }} --agent {{ vsts_agent_name }} --work {{ vsts_work_folder }} --replace"
+    vsts_install_command: "{{ vsts_install_command }} --unattended --acceptteeeula --url {{ vsts_server_url }} --auth PAT --token {{ vsts_accesstoken }} --agent {{ (vsts_environmentname | length > 0) | ternary(ansible_hostname, vsts_agent_name) }} --work {{ vsts_work_folder }} --replace"
 
 - name: Add agent pool to install command (default queue-agent)
   set_fact:
