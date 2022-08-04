@@ -72,7 +72,6 @@ ansible-galaxy install -r requirements.yml
       vars:
         vsts_accountname: accountname
         vsts_environmentname: "AppName-Production-DC1"
-        vsts_accesstoken: "yourtoken"
         vsts_projectname: "Project-Name"
         vsts_sudo_permissions:
           - /bin/systemctl reload vsts-agent
@@ -87,9 +86,13 @@ ansible-galaxy install -r requirements.yml
           - /bin/cp files/project-name.service /etc/systemd/system/project-name.service
           - /bin/systemctl enable project-name.service
           - /bin/cp files/newrelic.ini /etc/newrelic.ini
+      vars_prompt:
+      - name: "vsts_accesstoken"
+        prompt: "Enter vsts_accesstoken"
+        private: yes
 ```
 
-### Example Playbook to install deployment agent
+### Example Playbook to install deployment agent in deployment group
 
 ```yaml
 - hosts: windows
@@ -102,7 +105,23 @@ ansible-galaxy install -r requirements.yml
     prompt: "Enter vsts_accesstoken"
     private: yes
   roles:
-    - { role: stone-pagamentos.win-vsts-agent }
+    - { role: stone-payments.vsts-agent }
+```
+
+### Example Playbook to install deployment agent on environment
+
+```yaml
+- hosts: windows
+  vars:
+    vsts_accountname: myorg # For https://dev.azure.com/myorg
+    vsts_projectname: MyTeam
+    vsts_environmentname: MyApp-Staging
+  vars_prompt:
+  - name: "vsts_accesstoken"
+    prompt: "Enter vsts_accesstoken"
+    private: yes
+  roles:
+    - { role: stone-payments.vsts-agent }
 ```
 
 ### Example Playbook to install queue agent
@@ -118,7 +137,7 @@ ansible-galaxy install -r requirements.yml
     prompt: "Enter vsts_accesstoken"
     private: yes
   roles:
-    - { role: stone-pagamentos.win-vsts-agent }
+    - { role: stone-payments.vsts-agent }
 ```
 
 ### Example Playbook to uninstall agent
@@ -133,7 +152,7 @@ ansible-galaxy install -r requirements.yml
     prompt: "Enter vsts_accesstoken"
     private: yes
   roles:
-    - { role: stone-pagamentos.win-vsts-agent }
+    - { role: stone-payments.vsts-agent }
 ```
 
 ### Example Playbook to reinstall deployment agent
@@ -150,7 +169,7 @@ ansible-galaxy install -r requirements.yml
     prompt: "Enter vsts_accesstoken"
     private: yes
   roles:
-    - { role: stone-pagamentos.win-vsts-agent }
+    - { role: stone-payments.vsts-agent }
 ```
 
 ### Advanced scenarios
