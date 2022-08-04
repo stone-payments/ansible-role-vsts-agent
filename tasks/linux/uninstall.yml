@@ -29,7 +29,7 @@
 
 - name: Remove 'vsts-agent' folders
   file:
-    path: "{{ item }}"
+    path: "{{ (vsts_remove | bool) | ternary(item, item + '/*') }}"
     state: absent
   loop:
     - "{{ vsts_agent_folder }}"
