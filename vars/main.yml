@@ -1,0 +1,3 @@
+---
+vsts_agent_fullurl: "{{ vsts_agent_baseurl }}/{{ vsts_agent_version }}/{{ vsts_agent_file }}"
+vsts_server_url: "https://dev.azure.com/{{ vsts_accountname }}"

@@ -1,0 +1,36 @@
+- name: Set vsts_state fact
+  set_fact:
+    vsts_state: "{{ vsts_remove | ternary('absent', 'present') }}"
+
+- name: Create or remove {{ vsts_agent_user }} user
+  user:
+    name: "{{ vsts_agent_user }}"
+    groups: "{{ (ansible_os_family == 'RedHat') | ternary('wheel', 'sudo') }}"
+    home: "{{ vsts_agent_folder }}"
+    state: "{{ vsts_state }}"
+
+- name: Set sudo permissions
+  template:
+    src: sudo_permissions.j2
+    dest: "/etc/sudoers.d/{{ vsts_agent_user }}"
+  when:
+    - vsts_sudo_permissions | length > 0
+    - vsts_state == 'present'
+
+- name: Remove sudo permissions
+  file:
+    state: absent
+    path: "/etc/sudoers.d/{{ vsts_agent_user }}"
+  when: vsts_state == 'absent'
+
+- name: Create or remove vsts agent directories
+  file:
+    state: "{{ vsts_remove | ternary('absent', 'directory') }}"
+    path: "{{ item }}"
+    owner: "{{ vsts_agent_user }}"
+    group: "{{ vsts_agent_user }}"
+    mode: 0755
+  loop:
+    - "{{ vsts_agent_folder }}"
+    - "{{ vsts_work_folder }}"
+  tags: homedir

@@ -1,0 +1,4 @@
+{% set PROXYLIST = vsts_proxy_bypass.split(",") %}
+{% for PROXY in PROXYLIST %}
+{{ PROXY }}
+{% endfor %}

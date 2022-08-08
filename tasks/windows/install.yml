@@ -1,0 +1,42 @@
+---
+- name: Create directory for deploy VSTS Agent
+  win_file:
+    path: "{{ vsts_agent_folder }}"
+    state: directory
+
+- name: Download VSTS Agent Zip
+  win_get_url:
+    url: "{{ vsts_agent_fullurl }}"
+    dest: "{{ vsts_agent_folder }}\\agent-{{ vsts_agent_version }}.zip"
+    force: false
+
+- name: Unzip VSTS Agent
+  win_unzip:
+    src: "{{ vsts_agent_folder }}\\agent-{{ vsts_agent_version }}.zip"
+    dest: "{{ vsts_agent_folder }}"
+    delete_archive: true
+    creates: "{{ vsts_reinstall | bool | ternary(omit, vsts_agent_folder + '\\config.cmd') }}"
+
+- name: Include configure vsts-agent tasks
+  include_tasks: "../common/configure.yml"
+  when: dryrun is not defined
+  tags: config
+
+- name: Configure VSTS agent
+  win_command: "{{ vsts_install_command }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+    creates: "{{ vsts_agent_folder }}\\.agent"
+  no_log: true
+  notify: restart vsts-agent windows service
+
+- name: Create VSTS agent service
+  win_service:
+    name: "{{ vsts_windows_service_name }}"
+    display_name: "{{ vsts_service_description }}"
+    description: "{{ vsts_service_description }}"
+    path: "{{ vsts_agent_folder }}\\bin\\AgentService.exe"
+    start_mode: auto
+    state: started
+    username: "{{ vsts_windows_account }}"
+    password: "{{ (vsts_windows_account_password | length > 0) | ternary(vsts_windows_account_password, omit)}}"

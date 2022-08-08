@@ -1,0 +1,41 @@
+---
+dependency:
+  name: galaxy
+lint: |
+  set -e
+  yamllint .
+  ansible-lint
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+platforms:
+  - name: windows2016.molecule.local
+    box: jacqinthebox/windowsserver2016core
+    memory: 2048
+    cpus: 2
+    config_options:
+      vm.communicator: winrm
+    provider_options:
+      gui: false
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        vsts_agent_version: 2.206.1
+        vsts_accountname: ${VSTS_ACCOUNTNAME}
+        vsts_accesstoken: ${VSTS_ACCESSTOKEN}
+        vsts_projectname: ${VSTS_PROJECTNAME}
+  connection_options:
+    ansible_connection: winrm
+    ansible_port: 55985
+    ansible_host: 127.0.0.1
+    ansible_user: vagrant
+    ansible_password: vagrant
+    ansible_winrm_scheme: http
+    ansible_winrm_transport: basic
+verifier:
+  name: testinfra
+scenario:
+  name: windows

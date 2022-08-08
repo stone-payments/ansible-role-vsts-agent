@@ -1,0 +1,20 @@
+---
+- name: Check if 'vsts-agent' service exists
+  stat:
+    path: /etc/systemd/system/vsts-agent.service
+  register: vsts_service_result
+
+- block:
+    - name: Set current version, if installed
+      command: ./Agent.Listener --version
+      args:
+        chdir: "{{ vsts_agent_folder }}/bin"
+      changed_when: false
+      register: vsts_current_version
+
+    - name: Compare VSTS agent version to apply upgrade
+      set_fact:
+        vsts_upgrade_version: "{{ (vsts_current_version.stdout | trim) is version(vsts_agent_version, 'lt') }}"
+  when:
+    - vsts_service_result.stat.exists | bool
+    - not vsts_remove

@@ -1,11 +1,11 @@
 [Unit]
-Description=Azure Pipelines Agent
+Description={{ vsts_service_description }}
 After=network.target
 
 [Service]
-ExecStart={{vsts_agentfolder}}/bin/runsvc.sh
-User={{vsts_agent_user}}
-WorkingDirectory={{vsts_agentfolder}}
+ExecStart={{ vsts_agent_folder }}/bin/runsvc.sh
+User={{ vsts_agent_user }}
+WorkingDirectory={{ vsts_agent_folder }}
 KillMode=process
 KillSignal=SIGTERM
 TimeoutStopSec=5min

@@ -1,0 +1,7 @@
+---
+vsts_agent_folder: "C:\\vstsagent"
+vsts_work_folder: "{{ vsts_agent_folder }}\\work"
+vsts_agent_file: "vsts-agent-win-{{ vsts_agent_arch }}-{{ vsts_agent_version }}.zip"
+
+# Default service name for newer versions
+vsts_winservice_name: "vstsagent.{{ vsts_accountname }}.{{ (vsts_projectname + '-' + vsts_deploymentgroupname) | regex_replace('^(.{,25}).*', '\\1') }}.{{ vsts_agent_name }}"

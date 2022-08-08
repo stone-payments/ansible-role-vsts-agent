@@ -1,0 +1,81 @@
+---
+- name: Register base binary
+  set_fact:
+    vsts_install_command: "{{ (ansible_os_family == 'Windows') | ternary('.\\config.cmd', './config.sh') }}"
+
+- name: Register base install command as fact in variable vsts_install_command
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --unattended --acceptteeeula --url {{ vsts_server_url }} --auth PAT --token {{ vsts_accesstoken }} --agent {{ (vsts_environmentname | length > 0) | ternary(ansible_hostname, vsts_agent_name) }} --work {{ vsts_work_folder }} --replace"
+
+- name: Add agent pool to install command (default queue-agent)
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --pool {{ vsts_poolname }}"
+  when: vsts_poolname | length > 0
+
+- name: Add proxy-url to install command
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --proxyurl {{ vsts_proxyurl }}"
+  when: vsts_proxyurl | length > 0
+
+- name: Add proxy credentials to install command
+  set_fact:
+    install_command: "{{ vsts_install_command }} --proxyusername {{ vsts_proxy_username }} --proxypassword {{ vsts_proxy_password }}"
+  when: 
+    - vsts_proxy_username | length > 0
+    - vsts_proxy_password | length > 0
+
+- name: Add deployment group info to install command (deployment group agent)
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --projectname \"{{ vsts_projectname }}\" --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname }}"
+  register: deployment_group_set
+  when:
+    - vsts_deploymentgroupname | length > 0
+    - vsts_projectname | length > 0
+
+- name: Combaine vsts_deploymentgrouptags
+  set_fact:
+    vsts_deploymentgrouptags: "{{ ansible_hostname }},{{ vsts_deploymentgrouptags }}"
+  when: vsts_deploymentgroupname | length > 0
+
+- name: Add deployment group tags to install command (deployment group agent)
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --addDeploymentGroupTags --deploymentGroupTags {{ vsts_deploymentgrouptags | quote }}"
+  when:
+    - deployment_group_set is succeeded
+    - vsts_deploymentgrouptags | length > 0
+
+- name: Add environment info to install command
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --projectname \"{{ vsts_projectname }}\" --environment --environmentname {{ vsts_environmentname }}"
+  register: environment_set
+  when:
+    - vsts_environmentname | length > 0
+    - vsts_projectname | length > 0
+
+- name: Combaine vsts_virtualmachineresourcetags
+  set_fact:
+    vsts_virtualmachineresourcetags: "{{ ansible_hostname }},{{ vsts_virtualmachineresourcetags }}"
+  when: vsts_environmentname | length > 0
+
+- name: Add virtual machine resource tags to install command
+  set_fact:
+    vsts_install_command: "{{ vsts_install_command }} --addvirtualmachineresourcetags --virtualmachineresourcetags {{ vsts_virtualmachineresourcetags | quote }}"
+  when:
+    - environment_set is succeeded
+    - vsts_virtualmachineresourcetags | length > 0
+
+- name: Fail for conflicting options for default agent x deployment agent x environment resource
+  fail:
+    msg: "More than one agent type was found. Choose one of them to install. Options: vsts_poolname({{ vsts_poolname | upper }}), vsts_deploymentgroupname({{ vsts_deploymentgroupname | upper }}), vsts_environmentname({{ vsts_environmentname | upper }})"
+  when:
+    - vsts_poolname | length == 0
+    - vsts_deploymentgroupname | length == 0
+    - vsts_environmentname | length == 0
+
+- name: Fail for missing parameters in install command
+  fail:
+    msg: "Neither the vsts_poolname({{ vsts_poolname | upper }}) or the vsts_deploymentgroupname({{ vsts_deploymentgroupname | upper }})  or vsts_environmentname({{ vsts_environmentname | upper }}) vars are present, choose one of them to install."
+  when:
+    - vsts_poolname | length == 0
+    - vsts_deploymentgroupname | length == 0
+    - vsts_environmentname | length == 0

@@ -1,0 +1,28 @@
+---
+- name: Stop VSTS agent service
+  win_service:
+    name: "{{ vsts_service_result.services[0].name }}"
+    state: stopped
+
+- name: Update vsts_agent_folder
+  set_fact:
+    vsts_agent_folder: "{{ vsts_service_result.services[0].path | win_dirname | regex_replace('(bin|\\\")','') }}"
+
+- name: Uninstall VSTS Agent
+  win_command: ".\\config.cmd remove --unattended --auth pat --token {{ vsts_accesstoken }}"
+  args:
+    chdir: "{{ vsts_agent_folder }}"
+
+- name: Remove VSTS agent service
+  win_service:
+    name: "{{ vsts_service_result.services[0].name }}"
+    state: absent
+
+- name: Remove VSTS agent folders
+  win_file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "{{ vsts_agent_folder }}"
+    - "{{ vsts_work_folder }}"
+  when: vsts_remove | bool

@@ -1,8 +1,21 @@
 ---
-- name: Ansible Configuration for OS Family Debian
-  include_tasks: debian/main.yml
-  when: ansible_os_family == 'Debian'
+- name: Fail for conflicting options for VSTS agent
+  fail:
+    msg: "The vsts_accesstoken is needed to install or remove the VSTS agent."
+  when: vsts_accesstoken | length == 0
 
-- name: Ansible Configuration for OS Family Rhel
-  include_tasks: rhel/main.yml
-  when: ansible_os_family == 'RedHat'
+- name: Create vsts_service_description fact
+  set_fact:
+    vsts_service_description: "Azure Pipelines Agent ({{ vsts_windows_service_name }}{{ agent_pool }}{{ deploymentgroup_name }}{{ environment_name }})"
+  vars:
+    agent_pool: "{{ (vsts_poolname | length > 0) | ternary('.'+vsts_poolname, '')  }}"
+    deploymentgroup_name: "{{ (vsts_deploymentgroupname | length > 0) | ternary('.'+vsts_projectname+'.'+vsts_deploymentgroupname, '')  }}"
+    environment_name: "{{ (vsts_environmentname | length > 0) | ternary('.'+vsts_projectname+'.'+vsts_environmentname, '') }}"
+
+- name: Install VSTS agent on Linux hosts
+  include_tasks: linux/main.yml
+  when: ansible_os_family != 'Windows'
+
+- name: Install VSTS agent on Windows hosts
+  include_tasks: windows/main.yml
+  when: ansible_os_family == 'Windows'
