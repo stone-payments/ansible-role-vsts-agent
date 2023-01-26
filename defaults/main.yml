@@ -18,6 +18,7 @@ vsts_accountname: ""
 vsts_accesstoken: ""
 vsts_projectname: ""
 vsts_agent_name: "{{ inventory_hostname }}"
+vsts_apps_dir: ""
 
 # To use Agent pool (queue agent).
 vsts_poolname: ""

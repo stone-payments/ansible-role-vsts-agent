@@ -2,4 +2,3 @@
 vsts_agent_file: "vsts-agent-linux-{{ vsts_agent_arch }}-{{ vsts_agent_version }}.tar.gz"
 vsts_agent_folder: "/opt/vstsagent"
 vsts_work_folder: "{{ vsts_agent_folder }}/work"
-vsts_apps_dir: ""
