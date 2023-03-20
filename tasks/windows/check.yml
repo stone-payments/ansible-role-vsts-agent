@@ -15,6 +15,7 @@
     - name: Compare VSTS agent version to apply upgrade
       set_fact:
         vsts_upgrade_version: "{{ (vsts_current_version.stdout | trim) is version(vsts_agent_version, 'lt') }}"
+      when: not ansible_check_mode
   when:
     - vsts_service_result.services | length > 0
     - not vsts_remove

@@ -9,10 +9,14 @@
     state: restarted
     daemon_reload: true
   become: true
-  when: dryrun is not defined
+  when:
+    - dryrun is not defined
+    - not ansible_check_mode
 
 - name: restart vsts-agent windows service
   win_service:
     name: "{{ vsts_windows_service_name }}"
     state: restarted
-  when: dryrun is not defined
+  when:
+    - dryrun is not defined
+    - not ansible_check_mode
