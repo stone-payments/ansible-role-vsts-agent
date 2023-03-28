@@ -24,6 +24,45 @@
     - vsts_proxy_username | length > 0
     - vsts_proxy_password | length > 0
 
+- name: Configure proxy environment variables
+  block:
+  - name: Add proxy-url to environment variables
+    set_fact: 
+      vsts_environment_variables: "{{ vsts_environment_variables + [{'name': item, 'value': vsts_proxyurl}] }}"
+    when: 
+      - vsts_proxy_username | length == 0
+      - vsts_proxy_password | length == 0
+    with_items:
+      - http_proxy
+      - https_proxy
+      - HTTP_PROXY
+      - HTTPS_PROXY
+
+  - name: Add proxy credentials to environment variables 
+    set_fact: 
+      vsts_environment_variables: "{{ vsts_environment_variables + [{'name': item, 'value': proxy_auth_url }] }}"
+    when: 
+      - vsts_proxy_username | length > 0
+      - vsts_proxy_password | length > 0
+    with_items:
+      - http_proxy
+      - https_proxy
+      - HTTP_PROXY
+      - HTTPS_PROXY
+    vars: 
+      proxy_schema: "{{ (vsts_proxyurl | split('//'))[0] }}"
+      proxy_url: "{{ (vsts_proxyurl | split('//'))[1] }}"
+      proxy_auth_url: "{{ proxy_schema + '//' + vsts_proxy_username + ':' + vsts_proxy_password + '@' + proxy_url }}"
+  
+  - name: Define bypass proxy urls to environment variables
+    set_fact:
+      vsts_environment_variables: "{{ vsts_environment_variables + [{'name': item, 'value': vsts_proxy_bypass }] }}"
+    when: vsts_proxy_bypass | length > 0
+    with_items:
+      - NO_PROXY
+      - no_proxy
+  when: vsts_proxyurl | length > 0
+
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
     vsts_install_command: "{{ vsts_install_command }} --projectname \"{{ vsts_projectname }}\" --deploymentgroup --deploymentgroupname {{ vsts_deploymentgroupname }}"
