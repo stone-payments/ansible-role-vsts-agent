@@ -56,12 +56,14 @@
   
   - name: Define bypass proxy urls to environment variables
     set_fact:
-      vsts_environment_variables: "{{ vsts_environment_variables + [{'name': item, 'value': vsts_proxy_bypass }] }}"
+      vsts_environment_variables: "{{ vsts_environment_variables + [{'name': item, 'value': vsts_proxy_bypass | regex_replace('\\\\', '') }] }}"
     when: vsts_proxy_bypass | length > 0
     with_items:
       - NO_PROXY
       - no_proxy
-  when: vsts_proxyurl | length > 0
+  when: 
+    - vsts_proxyurl | length > 0
+    - ansible_os_family != 'Windows'
 
 - name: Add deployment group info to install command (deployment group agent)
   set_fact:
