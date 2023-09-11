@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+    name: ansible-kubernetes-namespace
+    title: Ansible Kubernetes Namespace Role
+    description: Ansible role to configure an new namespace on an existing Kubernetes cluster following the best practices defined by the SRE/Cloud team at Stone CO. After creating the namespace, this role automatically creates a new Service Connection in Azure DevOps that can access the namespace.
+    namespace: stone
+    tags:
+      - iac-library
+      - ansible
+    annotations:
+      legacy.stone.tech/owner-email: foundation.platform@stone.com.br
+spec:
+    type: library
+    lifecycle: production
+    owner: stone-payments/foundation-platform-solutions
