@@ -1,9 +1,9 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-    name: ansible-kubernetes-namespace
-    title: Ansible Kubernetes Namespace Role
-    description: Ansible role to configure an new namespace on an existing Kubernetes cluster following the best practices defined by the SRE/Cloud team at Stone CO. After creating the namespace, this role automatically creates a new Service Connection in Azure DevOps that can access the namespace.
+    name: ansible-role-vsts-agent
+    title: Ansible VSTS Agent Role
+    description: Ansible role to install Azure VSTS Agent on Linux or Windows.
     namespace: stone
     tags:
       - iac-library
