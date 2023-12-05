@@ -120,3 +120,4 @@
     - vsts_poolname | length == 0
     - vsts_deploymentgroupname | length == 0
     - vsts_environmentname | length == 0
+

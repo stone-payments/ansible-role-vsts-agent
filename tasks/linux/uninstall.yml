@@ -7,11 +7,9 @@
   ignore_errors: true
 
 - name: Unconfigure VSTS agent
-  command: "./config.sh remove --unattended --auth PAT --token {{ vsts_accesstoken }}"
+  command: "sudo -u {{ vsts_agent_user }} ./config.sh remove --unattended --auth PAT --token {{ vsts_accesstoken }}"
   args:
     chdir: "{{ vsts_agent_folder }}"
-  become: true
-  become_user: "{{ vsts_agent_user }}"
   when: config_file.stat.exists
   no_log: true
   tags: unconfig
