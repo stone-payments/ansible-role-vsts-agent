@@ -32,7 +32,6 @@
     state: present
   loop:
     - "{{ 'python3-pip' if (ansible_distribution_major_version | int >= 20) else 'python-pip' }}"
-    - python-pexpect
     - libcurl4-gnutls-dev
     - git
   become: true
