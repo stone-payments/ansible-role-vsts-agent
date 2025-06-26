@@ -1,7 +1,7 @@
 ---
 # Defaults configs for stone-payments.win-vsts-agent
 vsts_agent_arch: x64
-vsts_agent_version: 4.455.0
+vsts_agent_version: 2.258.1
 vsts_agent_baseurl: https://download.agent.dev.azure.com/agent/
 
 # Pass true to uninstall VSTS agent
